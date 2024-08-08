@@ -8,15 +8,14 @@
     <name>AutoxJsPlugin</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">YourCompany</vendor>
+    <vendor email="support@temp.com" url="https://www.yourcompany.com">temp</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
-    <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
-  ]]></description>
+    <description>
+        这里随便写,真正的描述在README.md里
+    </description>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
@@ -25,6 +24,41 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-
+        <!-- 声明应用级服务 -->
+        <applicationService serviceInterface="com.golyu.autoxjsplugin.jb.AutoJsServer"
+                            serviceImplementation="com.golyu.autoxjsplugin.jb.AutoJsServerImpl"/>
+        <!--   声明通知     -->
+        <notificationGroup id="AutoJs Plugin" displayType="BALLOON" isLogByDefault="true"/>
+        <!--   声明一个控制台     -->
+        <toolWindow canCloseContents="true" anchor="bottom"
+                    id="AutoJs Logcat"
+                    factoryClass="com.golyu.autoxjsplugin.jb.MyBottomWin">
+        </toolWindow>
     </extensions>
+    <!--  监听idea关闭-->
+    <applicationListeners>
+        <listener class="com.golyu.autoxjsplugin.jb.AutoJsServerImpl"
+                  topic="com.intellij.ide.AppLifecycleListener"/>
+    </applicationListeners>
+    <!-- 动作   -->
+    <actions>
+        <action id="ShowAllServer"
+                class="com.golyu.autoxjsplugin.jb.ShowAllAction"
+                icon="com.golyu.autoxjsplugin.icons.AutoJsIcons.AutoJsDisable"
+                text="查看AutoJs服务状态和连接设备"
+                description="启动一个服务,用于手机端的autoxJs软件连接到ide,用于便捷开发">
+            <!--     将action展示在菜单栏的工具子菜单中       -->
+            <!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
+            <!--      将action展示在工具栏中      -->
+            <add-to-group group-id="NavBarToolBar" relative-to-action="RunAnything" anchor="before"/>
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <group id="RightKeyGroup" text="同步代码到手机">
+            <separator/>
+            <separator/>
+            <!--suppress PluginXmlValidity -->
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
+        </group>
+    </actions>
 </idea-plugin>

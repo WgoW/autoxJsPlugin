@@ -1,5 +1,6 @@
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.changelog.markdownToHTML
+import kotlin.math.log
 
 plugins {
     id("java")// Java support
@@ -24,7 +25,7 @@ repositories {
     }
 }
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
 
     implementation("io.ktor:ktor-server-core-jvm:2.1.2")
     implementation("io.ktor:ktor-server-websockets-jvm:2.1.2")
@@ -35,7 +36,8 @@ dependencies {
     implementation("cn.hutool:hutool-all:5.8.9")
 
     intellijPlatform {
-        create("IC", "2023.2.7")
+//        create("IC", "2024.1.5")
+        create("WS", "2024.1.5")
 
         // Plugin Dependencies. Uses `platformBundledPlugins` property from the gradle.properties file for bundled IntelliJ Platform plugins.
 //        bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',') })
@@ -56,8 +58,8 @@ intellijPlatform {
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
         description = providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
-            val start = "<!-- 插件文档开始 -->"
-            val end = "<!-- 插件文档结束 -->"
+            val start = "<!-- Plugin description -->"
+            val end = "<!-- Plugin description end -->"
 
             with(it.lines()) {
                 if (!containsAll(listOf(start, end))) {
